@@ -153,15 +153,16 @@ for j in range(x.shape[0]):
                                           poi.ConstraintSense.LessEqual, 1.0)
 print('****** Cons. on Construction Logic Completed! ** cons num: %d ******' % (cons_op.index + 1))
 # 线缆不交叉约束
-Cr_Cab, Q = Find_Cr_Cab_new(In, L, node_num, I, J, Coord_WT, Coord_OS)
-for i in range(Q.shape[0]):
-    Cr1_index = Q[i][1] * np.ones([Q[i][0]], dtype='int')
-    Cr2_index = Q[i, 2:(Q[i][0] + 2)]
-    u = np.array(Q[i][0])
-    cons_cac = model.add_linear_constraint(poi.quicksum(x[Cr1_index[k]][j] + x[Cr2_index[k]][j] for k in range(u) for j in range(x.shape[1])),
-                                           poi.ConstraintSense.LessEqual, u)
-# for i in range(Cr_Cab.shape[0]):
-#     cons_cac = model.add_linear_constraint(poi.quicksum(x[Cr_Cab[i][0],:] + x[Cr_Cab[i][1],:]), poi.ConstraintSense.LessEqual, 1)
+# Cr_Cab, Q = Find_Cr_Cab_new(In, L, node_num, I, J, Coord_WT, Coord_OS)
+# for i in range(Q.shape[0]):
+#     Cr1_index = Q[i][1] * np.ones([Q[i][0]], dtype='int')
+#     Cr2_index = Q[i, 2:(Q[i][0] + 2)]
+#     u = np.array(Q[i][0])
+#     cons_cac = model.add_linear_constraint(poi.quicksum(x[Cr1_index[k]][j] + x[Cr2_index[k]][j] for k in range(u) for j in range(x.shape[1])),
+#                                            poi.ConstraintSense.LessEqual, u)
+Cr_Cab = Find_Cr_Cab(In, L, node_num, I, J, Coord_WT, Coord_OS)
+for i in range(Cr_Cab.shape[0]):
+    cons_cac = model.add_linear_constraint(poi.quicksum(x[Cr_Cab[i][0],:] + x[Cr_Cab[i][1],:]), poi.ConstraintSense.LessEqual, 1)
 print('****** Crossing-avoidance Cons.(CAC) Completed! ** cons num: %d ******' % (cons_cac.index + 1))
 # 功率平衡约束
 for i in range(In.shape[0] - 1):
